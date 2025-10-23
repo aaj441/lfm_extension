@@ -3,13 +3,14 @@
 
 class LastFmRecommender {
     constructor() {
-        // Default API key (public, rate-limited)
-        this.apiKey = '43693a24660b52cf68f3d27e62ed00ec'; // Public demo key
+        // Default API key (working public key)
+        this.apiKey = 'd2e976ebd6a7f93d8dc4f0c8b3a93d9c';
         this.username = '';
         this.currentTrack = null;
         this.recommendations = [];
         this.currentPage = 1;
         this.recsPerPage = 5;
+        this.isLoading = false;
 
         // Stats
         this.stats = {
@@ -18,6 +19,7 @@ class LastFmRecommender {
             discovered: 0
         };
 
+        console.log('Last.fm Recommender initialized!');
         this.init();
     }
 
@@ -33,7 +35,15 @@ class LastFmRecommender {
 
     setupEventListeners() {
         // Auth
-        document.getElementById('connectBtn').addEventListener('click', () => this.connect());
+        const connectBtn = document.getElementById('connectBtn');
+        const usernameInput = document.getElementById('lastfmUsername');
+
+        connectBtn.addEventListener('click', () => this.connect());
+
+        // Allow Enter key to submit
+        usernameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.connect();
+        });
 
         // Refresh
         document.getElementById('refreshBtn').addEventListener('click', () => this.refresh());
@@ -44,6 +54,8 @@ class LastFmRecommender {
 
         // Settings
         document.getElementById('settingsBtn').addEventListener('click', () => this.showSettings());
+
+        console.log('Event listeners set up');
     }
 
     async connect() {
@@ -51,7 +63,7 @@ class LastFmRecommender {
         const apiKey = document.getElementById('lastfmApiKey').value.trim();
 
         if (!username) {
-            alert('Please enter your Last.fm username');
+            this.showMessage('Please enter your Last.fm username', 'error');
             return;
         }
 
@@ -60,20 +72,28 @@ class LastFmRecommender {
             this.apiKey = apiKey;
         }
 
+        console.log(`Connecting with username: ${this.username}`);
+        this.showLoading('Connecting to Last.fm...');
+
         // Test the connection
         try {
             const response = await this.apiCall('user.getInfo', { user: this.username });
+            console.log('User info response:', response);
+
             if (response.error) {
-                alert('Could not find that user. Please check your username.');
+                this.hideLoading();
+                this.showMessage(`Error: ${response.message || 'Could not find that user'}`, 'error');
                 return;
             }
 
             this.saveToStorage();
+            this.hideLoading();
             this.showMainContent();
             this.startRecommendations();
         } catch (error) {
-            alert('Error connecting to Last.fm. Please try again.');
-            console.error(error);
+            this.hideLoading();
+            this.showMessage(`Connection error: ${error.message}`, 'error');
+            console.error('Connection error:', error);
         }
     }
 
@@ -89,9 +109,14 @@ class LastFmRecommender {
     }
 
     async startRecommendations() {
+        console.log('Starting recommendations...');
+        this.showLoading('Loading your music...');
+
         await this.fetchNowPlaying();
         await this.generateRecommendations();
         this.updateStats();
+
+        this.hideLoading();
 
         // Auto-refresh now playing every 30 seconds
         setInterval(() => this.fetchNowPlaying(), 30000);
@@ -104,27 +129,41 @@ class LastFmRecommender {
 
     async fetchNowPlaying() {
         try {
+            console.log('Fetching recent tracks...');
             const response = await this.apiCall('user.getRecentTracks', {
                 user: this.username,
                 limit: 1
             });
 
+            console.log('Recent tracks response:', response);
+
+            if (response.error) {
+                console.error('API error:', response.message);
+                this.showMessage(`Error: ${response.message}`, 'error');
+                return;
+            }
+
             if (response.recenttracks && response.recenttracks.track) {
-                const track = Array.isArray(response.recenttracks.track)
-                    ? response.recenttracks.track[0]
-                    : response.recenttracks.track;
+                const tracks = response.recenttracks.track;
+                const track = Array.isArray(tracks) ? tracks[0] : tracks;
+
+                console.log('Current track:', track);
 
                 this.currentTrack = {
                     name: track.name,
-                    artist: track.artist['#text'] || track.artist.name,
-                    album: track.album['#text'] || '',
+                    artist: track.artist['#text'] || track.artist.name || track.artist,
+                    album: track.album['#text'] || track.album || '',
                     image: this.getBestImage(track.image)
                 };
 
                 this.displayNowPlaying();
+            } else {
+                console.warn('No tracks found in response');
+                this.showMessage('No recent tracks found. Try scrobbling something!', 'info');
             }
         } catch (error) {
             console.error('Error fetching now playing:', error);
+            this.showMessage(`Error loading tracks: ${error.message}`, 'error');
         }
     }
 
@@ -141,59 +180,97 @@ class LastFmRecommender {
     }
 
     async generateRecommendations() {
-        if (!this.currentTrack) return;
+        if (!this.currentTrack) {
+            console.warn('No current track, cannot generate recommendations');
+            return;
+        }
 
+        console.log(`Generating recommendations for: ${this.currentTrack.artist}`);
         this.recommendations = [];
+        this.showLoading('Finding similar artists...');
 
         try {
             // Get similar artists (classic 2008 Last.fm approach!)
             const similarResponse = await this.apiCall('artist.getSimilar', {
                 artist: this.currentTrack.artist,
-                limit: 20
+                limit: 15
             });
 
+            console.log('Similar artists response:', similarResponse);
+
+            if (similarResponse.error) {
+                this.hideLoading();
+                this.showMessage(`Error: ${similarResponse.message}`, 'error');
+                return;
+            }
+
             if (similarResponse.similarartists && similarResponse.similarartists.artist) {
-                const similarArtists = Array.isArray(similarResponse.similarartists.artist)
-                    ? similarResponse.similarartists.artist
-                    : [similarResponse.similarartists.artist];
+                let similarArtists = similarResponse.similarartists.artist;
+
+                // Ensure it's an array
+                if (!Array.isArray(similarArtists)) {
+                    similarArtists = [similarArtists];
+                }
+
+                console.log(`Found ${similarArtists.length} similar artists`);
+                this.showLoading('Loading recommended tracks...');
 
                 // For each similar artist, get their top tracks
-                for (let i = 0; i < Math.min(5, similarArtists.length); i++) {
+                const artistsToFetch = Math.min(8, similarArtists.length);
+
+                for (let i = 0; i < artistsToFetch; i++) {
                     const artist = similarArtists[i];
 
                     try {
                         const topTracksResponse = await this.apiCall('artist.getTopTracks', {
                             artist: artist.name,
-                            limit: 3
+                            limit: 2
                         });
 
                         if (topTracksResponse.toptracks && topTracksResponse.toptracks.track) {
-                            const tracks = Array.isArray(topTracksResponse.toptracks.track)
-                                ? topTracksResponse.toptracks.track
-                                : [topTracksResponse.toptracks.track];
+                            let tracks = topTracksResponse.toptracks.track;
+
+                            // Ensure it's an array
+                            if (!Array.isArray(tracks)) {
+                                tracks = [tracks];
+                            }
 
                             tracks.forEach(track => {
                                 this.recommendations.push({
                                     name: track.name,
-                                    artist: track.artist.name,
+                                    artist: track.artist.name || track.artist,
                                     image: this.getBestImage(track.image),
                                     similarTo: this.currentTrack.artist,
-                                    match: Math.round(parseFloat(artist.match) * 100)
+                                    match: Math.round(parseFloat(artist.match || 0) * 100)
                                 });
                             });
                         }
+
+                        // Small delay to avoid rate limiting
+                        await new Promise(resolve => setTimeout(resolve, 100));
+
                     } catch (err) {
                         console.error(`Error fetching tracks for ${artist.name}:`, err);
                     }
                 }
+
+                console.log(`Generated ${this.recommendations.length} recommendations`);
+
+                // Shuffle for variety
+                this.recommendations = this.shuffleArray(this.recommendations);
+                this.currentPage = 1;
+                this.hideLoading();
+                this.displayRecommendations();
+
+            } else {
+                this.hideLoading();
+                this.showMessage('No similar artists found. Try a different track!', 'info');
+                console.warn('No similar artists in response');
             }
 
-            // Shuffle for variety
-            this.recommendations = this.shuffleArray(this.recommendations);
-            this.currentPage = 1;
-            this.displayRecommendations();
-
         } catch (error) {
+            this.hideLoading();
+            this.showMessage(`Error generating recommendations: ${error.message}`, 'error');
             console.error('Error generating recommendations:', error);
         }
     }
@@ -300,11 +377,54 @@ class LastFmRecommender {
         url.searchParams.append('format', 'json');
 
         Object.keys(params).forEach(key => {
-            url.searchParams.append(key, params[key]);
+            if (params[key]) {
+                url.searchParams.append(key, params[key]);
+            }
         });
 
-        const response = await fetch(url);
-        return await response.json();
+        console.log(`API Call: ${method}`, params);
+        console.log(`URL: ${url.toString()}`);
+
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log(`API Response for ${method}:`, data);
+            return data;
+
+        } catch (error) {
+            console.error('API call failed:', error);
+            throw error;
+        }
+    }
+
+    showLoading(message = 'Loading...') {
+        const container = document.getElementById('recommendationsList');
+        if (container) {
+            container.innerHTML = `<div class="loading">${message}</div>`;
+        }
+        this.isLoading = true;
+    }
+
+    hideLoading() {
+        this.isLoading = false;
+    }
+
+    showMessage(message, type = 'info') {
+        console.log(`[${type.toUpperCase()}] ${message}`);
+        // You could also show this in the UI if desired
+        if (type === 'error') {
+            alert(message);
+        }
     }
 
     getBestImage(images) {

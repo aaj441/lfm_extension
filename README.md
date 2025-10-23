@@ -21,13 +21,31 @@ Bring back the golden age of music discovery! This app recreates the classic Las
 
 ## Getting Started
 
-### Quick Start
+### Quick Start (Recommended)
 
-1. Open `index.html` in your browser
-2. Enter your Last.fm username
-3. (Optional) Enter your own Last.fm API key from [last.fm/api](https://www.last.fm/api/account/create)
-4. Click "Connect"
-5. Start discovering music!
+1. **Start the server:**
+   ```bash
+   python3 server.py
+   ```
+
+2. **Open in your browser:**
+   ```
+   http://localhost:8000
+   ```
+
+3. **Try it out:**
+   - Enter a Last.fm username (try: `rj` or `bahnhof`)
+   - Or use your own Last.fm username
+   - Click "Connect"
+   - Start discovering music!
+
+4. **Debug mode:**
+   - Open browser console (F12) to see detailed logs
+   - See [TESTING.md](TESTING.md) for full testing guide
+
+### Alternative: Direct File Open
+
+Simply open `index.html` in your browser (may have CORS limitations)
 
 ### Using as a Mobile Web App (PWA)
 

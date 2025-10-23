@@ -102,11 +102,17 @@ body {
     font-size: 11px;
     color: var(--lfm-text-light);
     margin-top: 10px;
+    line-height: 1.4;
 }
 
 .help-text a {
     color: var(--lfm-red);
     text-decoration: none;
+}
+
+.help-text strong {
+    color: var(--lfm-red);
+    font-weight: bold;
 }
 
 /* Buttons */
@@ -121,9 +127,18 @@ body {
     cursor: pointer;
     box-shadow: 0 1px 3px var(--lfm-shadow);
     font-family: inherit;
+    transition: transform 0.1s, box-shadow 0.1s;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(227, 28, 35, 0.4);
 }
 
 .btn-primary:active {
+    transform: translateY(0);
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
@@ -392,9 +407,27 @@ section {
 /* Loading State */
 .loading {
     text-align: center;
-    padding: 20px;
+    padding: 40px 20px;
     color: var(--lfm-text-light);
     font-style: italic;
+    font-size: 14px;
+}
+
+.loading::after {
+    content: '...';
+    animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+    0%, 20% {
+        content: '.';
+    }
+    40% {
+        content: '..';
+    }
+    60%, 100% {
+        content: '...';
+    }
 }
 
 /* Responsive tweaks */
