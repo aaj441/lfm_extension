@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """
-Simple HTTP server for testing Last.fm Recommender
-Run with: python3 server.py
-Then open: http://localhost:8000
+HTTP server for Last.fm Recommender
+Supports both local development and Railway deployment
 """
 
 import http.server
 import socketserver
 import os
 
-PORT = 8000
+# Use Railway's PORT environment variable, fallback to 8000 for local dev
+PORT = int(os.environ.get('PORT', 8000))
 
 class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     def end_headers(self):
@@ -24,12 +24,22 @@ class MyHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.send_response(200)
         self.end_headers()
 
+    def log_message(self, format, *args):
+        # Log requests for debugging
+        print(f"[{self.log_date_time_string()}] {format % args}")
+
+# Change to script directory
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-with socketserver.TCPServer(("", PORT), MyHTTPRequestHandler) as httpd:
+# Bind to 0.0.0.0 to accept connections from any network interface (required for Railway)
+with socketserver.TCPServer(("0.0.0.0", PORT), MyHTTPRequestHandler) as httpd:
     print(f"\n🎵 Last.fm Recommender Server Running!")
-    print(f"📱 Open in your browser: http://localhost:{PORT}")
-    print(f"💻 Or access from phone: http://[your-local-ip]:{PORT}")
+    print(f"📱 Listening on port: {PORT}")
+    if PORT == 8000:
+        print(f"🔗 Local: http://localhost:{PORT}")
+        print(f"💻 Network: http://[your-local-ip]:{PORT}")
+    else:
+        print(f"☁️  Railway deployment mode")
     print(f"\n✋ Press Ctrl+C to stop the server\n")
 
     try:

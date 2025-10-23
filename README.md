@@ -61,6 +61,31 @@ On mobile devices, you can "install" this as an app:
 2. Tap the menu (⋮)
 3. Tap "Add to Home Screen"
 
+## Deployment
+
+### Deploy to Railway (Cloud Hosting)
+
+This app is ready to deploy to Railway:
+
+1. **Push to GitHub** (already done!)
+2. **Go to [Railway.app](https://railway.app)** and sign in
+3. **New Project → Deploy from GitHub repo**
+4. **Select this repository**
+5. Railway will auto-detect and deploy!
+
+Your app will be live at: `https://your-app.railway.app`
+
+**See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions and troubleshooting.**
+
+### Alternative Deployment Options
+
+This is a static frontend app, so you can also deploy to:
+- **Netlify/Vercel** - Just drag and drop the HTML/CSS/JS files
+- **GitHub Pages** - Free hosting from your repo
+- **Cloudflare Pages** - Fast global CDN
+
+For static hosting, you don't even need the server.py - just the frontend files!
+
 ## The 2008 Difference
 
 Back in 2008, Last.fm's recommendations were built on **collaborative filtering** - real people's listening habits creating connections between artists. The algorithm was simpler but felt more authentic. This app brings that experience back by:
@@ -76,6 +101,17 @@ Back in 2008, Last.fm's recommendations were built on **collaborative filtering*
 - Last.fm Web API
 - Progressive Web App (PWA) ready
 - Mobile-responsive design
+- Python server for local dev and Railway deployment
+
+## Deployment Files
+
+Railway deployment is configured with:
+- `Procfile` - Railway/Heroku process file
+- `railway.json` - Railway configuration
+- `nixpacks.toml` - Nixpacks build configuration
+- `requirements.txt` - Python dependencies (Railway detection)
+- `runtime.txt` - Python version specification
+- `server.py` - Production-ready HTTP server with dynamic PORT
 
 ## Customization
 

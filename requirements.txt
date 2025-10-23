@@ -1,0 +1,2 @@
+# Python runtime (no additional packages needed for this app)
+# This file ensures Railway detects this as a Python project
