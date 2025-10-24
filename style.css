@@ -1,0 +1,444 @@
+/* 2008 Last.fm Inspired Retro Styling */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Black and Red Theme */
+    --lfm-red: #e31c23;
+    --lfm-dark-red: #b71519;
+    --lfm-bright-red: #ff3333;
+    --lfm-bg: #0a0a0a;
+    --lfm-secondary-bg: #1a1a1a;
+    --lfm-card-bg: #151515;
+    --lfm-border: #333333;
+    --lfm-text: #e0e0e0;
+    --lfm-text-light: #999999;
+    --lfm-shadow: rgba(0, 0, 0, 0.5);
+}
+
+body {
+    font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, sans-serif;
+    background: #000000;
+    color: var(--lfm-text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0;
+    min-height: 100vh;
+    background: var(--lfm-bg);
+    box-shadow: 0 0 20px var(--lfm-shadow);
+}
+
+/* Header */
+.header {
+    background: linear-gradient(180deg, var(--lfm-red) 0%, var(--lfm-dark-red) 100%);
+    padding: 20px;
+    text-align: center;
+    border-bottom: 3px solid var(--lfm-dark-red);
+    box-shadow: 0 2px 5px var(--lfm-shadow);
+}
+
+.logo {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    margin-bottom: 5px;
+}
+
+.tagline {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 12px;
+    font-style: italic;
+}
+
+/* Auth Section */
+.auth-section {
+    padding: 40px 20px;
+}
+
+.auth-box {
+    background: var(--lfm-card-bg);
+    border: 1px solid var(--lfm-border);
+    border-radius: 5px;
+    padding: 30px 20px;
+    text-align: center;
+    box-shadow: 0 2px 10px var(--lfm-shadow);
+}
+
+.auth-box h2 {
+    color: var(--lfm-red);
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    border: 1px solid var(--lfm-border);
+    border-radius: 3px;
+    font-size: 14px;
+    font-family: inherit;
+    background: var(--lfm-bg);
+    color: var(--lfm-text);
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: var(--lfm-red);
+    box-shadow: 0 0 8px rgba(227, 28, 35, 0.5);
+}
+
+.help-text {
+    font-size: 11px;
+    color: var(--lfm-text-light);
+    margin-top: 10px;
+    line-height: 1.4;
+}
+
+.help-text a {
+    color: var(--lfm-red);
+    text-decoration: none;
+}
+
+.help-text strong {
+    color: var(--lfm-red);
+    font-weight: bold;
+}
+
+/* Buttons */
+.btn-primary {
+    background: linear-gradient(180deg, var(--lfm-red) 0%, var(--lfm-dark-red) 100%);
+    color: white;
+    border: 1px solid var(--lfm-dark-red);
+    padding: 10px 24px;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 1px 3px var(--lfm-shadow);
+    font-family: inherit;
+    transition: transform 0.1s, box-shadow 0.1s;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(227, 28, 35, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.btn-secondary {
+    background: var(--lfm-card-bg);
+    color: var(--lfm-text);
+    border: 1px solid var(--lfm-border);
+    padding: 8px 16px;
+    border-radius: 3px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.btn-secondary:hover {
+    border-color: var(--lfm-red);
+}
+
+.btn-icon {
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 5px 10px;
+}
+
+/* Main Content */
+.main-content {
+    padding: 0;
+}
+
+section {
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--lfm-border);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: var(--lfm-secondary-bg);
+    border-bottom: 1px solid var(--lfm-border);
+}
+
+.section-header h2 {
+    font-size: 16px;
+    color: var(--lfm-red);
+    font-weight: bold;
+}
+
+/* Now Playing */
+.now-playing {
+    background: var(--lfm-secondary-bg);
+}
+
+.track-card {
+    display: flex;
+    gap: 15px;
+    padding: 20px;
+}
+
+.track-card.current {
+    background: var(--lfm-card-bg);
+    border: 1px solid var(--lfm-border);
+    border-radius: 5px;
+    margin: 0;
+    box-shadow: 0 2px 8px var(--lfm-shadow);
+}
+
+.track-art {
+    flex-shrink: 0;
+}
+
+.track-art img {
+    width: 80px;
+    height: 80px;
+    border-radius: 3px;
+    border: 1px solid var(--lfm-border);
+    background: var(--lfm-bg);
+    object-fit: cover;
+}
+
+.track-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.track-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--lfm-text);
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-artist {
+    font-size: 14px;
+    color: var(--lfm-red);
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-album {
+    font-size: 12px;
+    color: var(--lfm-text-light);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Recommendations */
+.recommendations-list {
+    background: var(--lfm-secondary-bg);
+}
+
+.recommendation-item {
+    display: flex;
+    gap: 12px;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--lfm-border);
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.recommendation-item:hover {
+    background: var(--lfm-card-bg);
+}
+
+.recommendation-item:last-child {
+    border-bottom: none;
+}
+
+.rec-art {
+    flex-shrink: 0;
+}
+
+.rec-art img {
+    width: 60px;
+    height: 60px;
+    border-radius: 3px;
+    border: 1px solid var(--lfm-border);
+    background: var(--lfm-bg);
+    object-fit: cover;
+}
+
+.rec-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.rec-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--lfm-text);
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rec-artist {
+    font-size: 13px;
+    color: var(--lfm-red);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rec-reason {
+    font-size: 11px;
+    color: var(--lfm-text-light);
+    font-style: italic;
+}
+
+.rec-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.btn-action {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--lfm-border);
+    background: var(--lfm-bg);
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    color: var(--lfm-text);
+}
+
+.btn-action.pass {
+    border-color: #666;
+}
+
+.btn-action.pass:active {
+    background: var(--lfm-card-bg);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.btn-action.like {
+    border-color: var(--lfm-red);
+    color: var(--lfm-red);
+}
+
+.btn-action.like:active {
+    background: var(--lfm-dark-red);
+    color: white;
+    box-shadow: 0 0 15px rgba(227, 28, 35, 0.6);
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--lfm-text-light);
+}
+
+/* Stats */
+.stats {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+    background: var(--lfm-secondary-bg);
+}
+
+.stat-box {
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    font-size: 11px;
+    color: var(--lfm-text-light);
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--lfm-red);
+}
+
+/* Footer */
+.footer {
+    padding: 20px;
+    text-align: center;
+    background: var(--lfm-secondary-bg);
+    border-top: 1px solid var(--lfm-border);
+}
+
+/* Loading State */
+.loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--lfm-text-light);
+    font-style: italic;
+    font-size: 14px;
+}
+
+.loading::after {
+    content: '...';
+    animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+    0%, 20% {
+        content: '.';
+    }
+    40% {
+        content: '..';
+    }
+    60%, 100% {
+        content: '...';
+    }
+}
+
+/* Responsive tweaks */
+@media (max-width: 400px) {
+    .track-art img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .rec-art img {
+        width: 50px;
+        height: 50px;
+    }
+}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Last.fm Recommender - 2008 Style</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">Last.fm Recommender</h1>
+            <p class="tagline">Discover music like it's 2008</p>
+        </header>
+
+        <div class="auth-section" id="authSection">
+            <div class="auth-box">
+                <h2>Connect Your Last.fm</h2>
+                <input type="text" id="lastfmUsername" placeholder="Last.fm Username" class="input-field" autocomplete="off">
+                <input type="password" id="lastfmApiKey" placeholder="API Key (optional)" class="input-field" autocomplete="off">
+                <button id="connectBtn" class="btn-primary">Connect</button>
+                <p class="help-text">Don't have Last.fm? Try username: <strong>rj</strong> or <strong>bahnhof</strong></p>
+                <p class="help-text" style="margin-top: 5px;">Get your own API key from <a href="https://www.last.fm/api/account/create" target="_blank">last.fm/api</a></p>
+            </div>
+        </div>
+
+        <div class="main-content" id="mainContent" style="display: none;">
+            <!-- Now Playing Section -->
+            <section class="now-playing">
+                <div class="section-header">
+                    <h2>Now Playing</h2>
+                    <button id="refreshBtn" class="btn-icon">🔄</button>
+                </div>
+                <div class="track-card current" id="nowPlaying">
+                    <div class="track-art">
+                        <img src="" alt="" id="currentArt">
+                    </div>
+                    <div class="track-info">
+                        <h3 class="track-title" id="currentTitle">No track playing</h3>
+                        <p class="track-artist" id="currentArtist">-</p>
+                        <p class="track-album" id="currentAlbum">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recommendations Section -->
+            <section class="recommendations">
+                <div class="section-header">
+                    <h2>You Might Like</h2>
+                    <div class="pagination">
+                        <button id="prevPage" class="btn-icon">←</button>
+                        <span id="pageInfo">Page 1</span>
+                        <button id="nextPage" class="btn-icon">→</button>
+                    </div>
+                </div>
+                <div id="recommendationsList" class="recommendations-list">
+                    <!-- Recommendations will be inserted here -->
+                </div>
+            </section>
+
+            <!-- Stats Section -->
+            <section class="stats">
+                <div class="stat-box">
+                    <span class="stat-label">Liked</span>
+                    <span class="stat-value" id="likedCount">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Passed</span>
+                    <span class="stat-value" id="passedCount">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Discovered</span>
+                    <span class="stat-value" id="discoveredCount">0</span>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer">
+            <button id="settingsBtn" class="btn-secondary">Settings</button>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
