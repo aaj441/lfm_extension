@@ -8,7 +8,10 @@
     "build": "vite build",
     "preview": "vite preview"
   },
-  "devDependencies": {
-    "@dyad-sh/react-vite-component-tagger": "^0.8.0"
+  "dependencies": {
+    "@capacitor/android": "^7.4.4",
+    "@capacitor/cli": "^7.4.4",
+    "@capacitor/core": "^7.4.4",
+    "@capacitor/ios": "^7.4.4"
   }
 }
