@@ -7,5 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@dyad-sh/react-vite-component-tagger": "^0.8.0"
   }
 }
